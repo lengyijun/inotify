@@ -1,3 +1,4 @@
+use std::prelude::v1::*;
 use std::{
     ffi::CString,
     io,
@@ -22,8 +23,9 @@ use libc::{
     F_SETFL,
     FD_CLOEXEC,
     O_NONBLOCK,
-    fcntl,
 };
+use libc::ocall::fcntl_arg0;
+use libc::ocall::fcntl_arg1;
 
 use crate::events::Events;
 use crate::fd_guard::FdGuard;
@@ -100,8 +102,8 @@ impl Inotify {
         // https://github.com/rust-lang/rust/issues/12148
         let fd = unsafe {
             let fd = ffi::inotify_init();
-            fcntl(fd, F_SETFD, FD_CLOEXEC);
-            fcntl(fd, F_SETFL, O_NONBLOCK);
+            fcntl_arg1(fd, F_SETFD, FD_CLOEXEC);
+            fcntl_arg1(fd, F_SETFL, O_NONBLOCK);
             fd
         };
 
@@ -285,11 +287,11 @@ impl Inotify {
         -> io::Result<Events<'a>>
     {
         unsafe {
-            fcntl(**self.fd, F_SETFL, fcntl(**self.fd, F_GETFL) & !O_NONBLOCK)
+            fcntl_arg1(**self.fd, F_SETFL, fcntl_arg0(**self.fd, F_GETFL) & !O_NONBLOCK)
         };
         let result = self.read_events(buffer);
         unsafe {
-            fcntl(**self.fd, F_SETFL, fcntl(**self.fd, F_GETFL) | O_NONBLOCK)
+            fcntl_arg1(**self.fd, F_SETFL, fcntl_arg0(**self.fd, F_GETFL) | O_NONBLOCK)
         };
 
         result

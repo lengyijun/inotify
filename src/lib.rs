@@ -69,6 +69,9 @@
 #![deny(missing_docs)]
 #![deny(warnings)]
 
+#![no_std]
+extern crate sgx_tstd as std;
+extern crate sgx_libc as libc;
 
 #[macro_use]
 extern crate bitflags;

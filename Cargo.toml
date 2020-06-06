@@ -33,10 +33,13 @@ stream = ["futures-core", "mio", "tokio"]
 [dependencies]
 bitflags     = "1"
 futures-core = { version = "0.3.1", optional = true }
-inotify-sys  = "0.1.3"
-libc         = "0.2"
+inotify-sys  = {git="https://github.com/lengyijun/inotify-sys"}
 mio          = { version = "0.6", optional = true }
 tokio        = { version = "0.2.2", optional = true, features = ["io-driver"] }
+
+[target.'cfg(not(target_env = "sgx"))'.dependencies]
+sgx_tstd = { version = "1.0", rev = "v1.1.2", git = "https://github.com/apache/teaclave-sgx-sdk.git", features=["untrusted_fs", "thread", "backtrace"] }
+sgx_libc = { version = "1.0", rev = "v1.1.2", git = "https://github.com/apache/teaclave-sgx-sdk.git" }
 
 [dev-dependencies]
 tempdir      = "0.3"
