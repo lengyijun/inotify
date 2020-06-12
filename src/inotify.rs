@@ -36,8 +36,6 @@ use crate::watches::{
 };
 
 
-#[cfg(feature = "stream")]
-use crate::stream::EventStream;
 
 
 /// Idiomatic Rust wrapper around Linux's inotify API
@@ -391,21 +389,6 @@ impl Inotify {
         };
 
         Ok(Events::new(Arc::downgrade(&self.fd), buffer, num_bytes))
-    }
-
-    /// Create a stream which collects events
-    ///
-    /// Returns a `Stream` over all events that are available. This stream is an
-    /// infinite source of events.
-    ///
-    /// An internal buffer which can hold the largest possible event is used.
-    #[cfg(feature = "stream")]
-    pub fn event_stream<T>(&mut self, buffer: T)
-        -> io::Result<EventStream<T>>
-    where
-        T: AsMut<[u8]> + AsRef<[u8]>,
-    {
-        EventStream::new(self.fd.clone(), buffer)
     }
 
     /// Closes the inotify instance

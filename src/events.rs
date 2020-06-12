@@ -196,15 +196,6 @@ impl<'a> Event<&'a OsStr> {
         (bytes_consumed, event)
     }
 
-    #[cfg(feature = "stream")]
-    pub(crate) fn into_owned(&self) -> EventOwned {
-        Event {
-            wd: self.wd.clone(),
-            mask: self.mask,
-            cookie: self.cookie,
-            name: self.name.map(OsStr::to_os_string),
-        }
-    }
 }
 
 

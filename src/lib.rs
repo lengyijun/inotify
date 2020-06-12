@@ -82,8 +82,6 @@ mod inotify;
 mod util;
 mod watches;
 
-#[cfg(feature = "stream")]
-mod stream;
 
 
 pub use crate::events::{
@@ -98,5 +96,3 @@ pub use crate::watches::{
     WatchMask,
 };
 
-#[cfg(feature = "stream")]
-pub use self::stream::EventStream;
